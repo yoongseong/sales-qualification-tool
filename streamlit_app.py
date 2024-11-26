@@ -32,7 +32,7 @@ with GraphDatabase.driver(URI, auth=AUTH) as driver:
                     "MATCH (c:Challenge) RETURN c.name as name",
                     database_="neo4j",
                 )
-                print(records)
+                st.text(records)
                 st.write(records)
                 st.json(records)
                 st.markdown("#### Are you facing any challenges in the following area of your IT infrastructure?")
