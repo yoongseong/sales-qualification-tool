@@ -24,27 +24,30 @@ if "stage" not in st.session_state:
 placeholder = st.empty()
 with GraphDatabase.driver(URI, auth=AUTH) as driver:
     driver.verify_connectivity()
-
-if st.session_state["stage"] == "1-challenge":
-    with placeholder.container():
-        # challenges = ["North", "East", "South", "West"]
-        records, summary, keys = driver.execute_query(
-            "MATCH (c:Challenge) RETURN c.name as name",
-            database_="neo4j",
-        )
-        st.write(records)
-        st.json(records)
-        st.markdown("#### Are you facing any challenges in the following area of your IT infrastructure?")
-        selection = st.pills("Choose as many as you like", records, selection_mode="multi")
-        st.text("")
-        st.button("Next", on_click=set_stage, args=["2-requirement"])
-elif st.session_state["stage"] == "2-requirement":
-    with placeholder.container():
-        requirements = ["North", "East", "South", "West"]
-        st.markdown("#### Do you face?")
-        st.text("")
-        st.button("Get recommendation", type="primary", on_click=set_stage, args=["3-recommendation"])
-        st.button("Back", on_click=set_stage, args=["1-challenge"])
-elif st.session_state["stage"] == "3-recommendation":
-    with placeholder.container():
-        st.button("Start again", on_click=set_stage, args=["1-challenge"])
+    try:
+        if st.session_state["stage"] == "1-challenge":
+            with placeholder.container():
+                # challenges = ["North", "East", "South", "West"]
+                records, summary, keys = driver.execute_query(
+                    "MATCH (c:Challenge) RETURN c.name as name",
+                    database_="neo4j",
+                )
+                print(records)
+                st.write(records)
+                st.json(records)
+                st.markdown("#### Are you facing any challenges in the following area of your IT infrastructure?")
+                selection = st.pills("Choose as many as you like", records, selection_mode="multi")
+                st.text("")
+                st.button("Next", on_click=set_stage, args=["2-requirement"])
+        elif st.session_state["stage"] == "2-requirement":
+            with placeholder.container():
+                requirements = ["North", "East", "South", "West"]
+                st.markdown("#### Do you face?")
+                st.text("")
+                st.button("Get recommendation", type="primary", on_click=set_stage, args=["3-recommendation"])
+                st.button("Back", on_click=set_stage, args=["1-challenge"])
+        elif st.session_state["stage"] == "3-recommendation":
+            with placeholder.container():
+                st.button("Start again", on_click=set_stage, args=["1-challenge"])
+    except Exception as e:
+        print(e)
