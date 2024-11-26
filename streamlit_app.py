@@ -15,11 +15,14 @@ st.title(":clipboard: NTT Com DD Sales Qualification Tool")
 st.text("")
 st.text("")
 
-def set_stage(stage, selection):
+def set_stage(stage):
+    st.session_state["stage"] = stage
+
+def get_requirements(stage, selection):
     if len(selection) == 0:
         st.warning("No selection is made. Please select at least 1 challenge to proceed.", icon="⚠️")
     else:
-        st.session_state["stage"] = stage
+        set_stage(stage)
         st.session_state["selection"] = selection
 
 if "stage" not in st.session_state:
@@ -39,11 +42,12 @@ with GraphDatabase.driver(URI, auth=AUTH) as driver:
                 st.markdown("#### Are you facing any challenges in the following area of your IT infrastructure?")
                 selection = st.pills("Choose as many as you like", records[0]["name"], selection_mode="multi")
                 st.text("")
-                st.button("Next", on_click=set_stage, args=["2-requirement", selection])
+                st.button("Next", on_click=get_requirements, args=["2-requirement", selection])
         elif st.session_state["stage"] == "2-requirement":
             with placeholder.container():
                 requirements = st.session_state["selection"]
                 st.text(requirements)
+                st.write(requirements)
                 st.markdown("#### Do you face?")
                 st.text("")
                 st.button("Get recommendation", type="primary", on_click=set_stage, args=["3-recommendation"])
