@@ -17,7 +17,7 @@ st.text("")
 
 def set_stage(stage, selection):
     if len(selection) == 0:
-        st.info("No selection is made.", icon=":information_source:")
+        st.info("No selection is made.", icon="ℹ️")
     else:
         st.session_state["stage"] = stage
         st.session_state["selection"] = selection
