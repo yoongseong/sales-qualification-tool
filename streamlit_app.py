@@ -29,12 +29,11 @@ with GraphDatabase.driver(URI, auth=AUTH) as driver:
             with placeholder.container():
                 # challenges = ["North", "East", "South", "West"]
                 records, summary, keys = driver.execute_query(
-                    "MATCH (c:Challenge) RETURN c.name as name",
+                    "MATCH (c:Challenge) RETURN collect(c.name) as name",
                     database_="neo4j",
                 )
                 st.text(records)
                 st.write(records)
-                st.json(records)
                 st.markdown("#### Are you facing any challenges in the following area of your IT infrastructure?")
                 selection = st.pills("Choose as many as you like", records, selection_mode="multi")
                 st.text("")
