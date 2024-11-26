@@ -17,7 +17,7 @@ st.text("")
 
 def set_stage(stage, selection):
     if len(selection) == 0:
-        st.info("No selection is made.", icon="ℹ️")
+        st.warning("No selection is made.", icon="⚠️")
     else:
         st.session_state["stage"] = stage
         st.session_state["selection"] = selection
@@ -51,4 +51,4 @@ with GraphDatabase.driver(URI, auth=AUTH) as driver:
             with placeholder.container():
                 st.button("Start again", on_click=set_stage, args=["1-challenge"])
     except Exception as e:
-        print(e)
+        st.exception(e)
