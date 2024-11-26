@@ -1,7 +1,8 @@
 import streamlit as st
 from neo4j import GraphDatabase
 
-URI = st.secrets["NEO4J_URI"]
+# URI = st.secrets["NEO4J_URI"]
+URI = "neo4j+s://3a366ad4.databases.neo4j.io"
 AUTH = (st.secrets["NEO4J_USERNAME"], st.secrets["NEO4J_PASSWORD"])
 
 st.logo("gallery/logo.png")
