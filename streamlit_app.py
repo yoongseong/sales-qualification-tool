@@ -4,6 +4,12 @@ from neo4j import GraphDatabase
 URI = st.secrets["NEO4J_URI"]
 AUTH = (st.secrets["NEO4J_USERNAME"], st.secrets["NEO4J_PASSWORD"])
 
+st.set_page_config(
+    page_title="NTT Com DD Sales Tool",
+    page_icon="gallery/favicon.ico",
+    layout="wide"
+)
+
 st.logo("gallery/logo.png")
 st.title(":clipboard: NTT Com DD Sales Qualification Tool")
 
@@ -16,7 +22,7 @@ if "stage" not in st.session_state:
 placeholder = st.empty()
 with GraphDatabase.driver(URI, auth=AUTH) as driver:
     driver.verify_connectivity()
-    
+
 if st.session_state["stage"] == "1-challenge":
     with placeholder.container():
         challenges = ["North", "East", "South", "West"]
