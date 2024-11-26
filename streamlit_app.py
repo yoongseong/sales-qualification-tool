@@ -33,7 +33,7 @@ with GraphDatabase.driver(URI, auth=AUTH) as driver:
                     database_="neo4j",
                 )
                 st.text(records)
-                st.text(type(records))
+                st.text(type(records[0]))
                 st.write(records)
                 st.markdown("#### Are you facing any challenges in the following area of your IT infrastructure?")
                 selection = st.pills("Choose as many as you like", records, selection_mode="multi")
