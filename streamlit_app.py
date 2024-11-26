@@ -15,8 +15,12 @@ st.title(":clipboard: NTT Com DD Sales Qualification Tool")
 st.text("")
 st.text("")
 
-def set_stage(stage):
-    st.session_state["stage"] = stage
+def set_stage(stage, selection):
+    if len(selection) == 0:
+        st.info("No selection is made.", icon=":information_source:")
+    else:
+        st.session_state["stage"] = stage
+        st.session_state["selection"] = selection
 
 if "stage" not in st.session_state:
     st.session_state["stage"] = "1-challenge"
@@ -32,13 +36,10 @@ with GraphDatabase.driver(URI, auth=AUTH) as driver:
                     "MATCH (c:Challenge) RETURN collect(c.name) as name",
                     database_="neo4j",
                 )
-                st.text(records)
-                st.text(type(records[0]))
-                st.write(records)
                 st.markdown("#### Are you facing any challenges in the following area of your IT infrastructure?")
                 selection = st.pills("Choose as many as you like", records[0]["name"], selection_mode="multi")
                 st.text("")
-                st.button("Next", on_click=set_stage, args=["2-requirement"])
+                st.button("Next", on_click=set_stage, args=["2-requirement", selection])
         elif st.session_state["stage"] == "2-requirement":
             with placeholder.container():
                 requirements = ["North", "East", "South", "West"]
