@@ -27,9 +27,13 @@ with GraphDatabase.driver(URI, auth=AUTH) as driver:
 
 if st.session_state["stage"] == "1-challenge":
     with placeholder.container():
-        challenges = ["North", "East", "South", "West"]
+        # challenges = ["North", "East", "South", "West"]
+        records, summary, keys = driver.execute_query(
+            "MATCH (c:Challenge) RETURN c.name AS name",
+            database_="neo4j",
+        )
         st.markdown("#### Are you facing any challenges in the following area of your IT infrastructure?")
-        selection = st.pills("Choose as many as you like", challenges, selection_mode="multi")
+        selection = st.pills("Choose as many as you like", records, selection_mode="multi")
         st.text("")
         st.button("Next", on_click=set_stage, args=["2-requirement"])
 elif st.session_state["stage"] == "2-requirement":
