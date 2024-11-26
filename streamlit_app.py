@@ -29,7 +29,7 @@ if st.session_state["stage"] == "1-challenge":
     with placeholder.container():
         # challenges = ["North", "East", "South", "West"]
         records, summary, keys = driver.execute_query(
-            "MATCH (c:Challenge) RETURN c.name AS name",
+            "MATCH (c:Challenge) RETURN collect(c.name)",
             database_="neo4j",
         )
         st.write(records)
