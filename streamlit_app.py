@@ -17,7 +17,7 @@ st.text("")
 
 def set_stage(stage, selection):
     if len(selection) == 0:
-        st.warning("No selection is made.", icon="⚠️")
+        st.warning("No selection is made. Please select at least 1 challenge to proceed.", icon="⚠️")
     else:
         st.session_state["stage"] = stage
         st.session_state["selection"] = selection
@@ -42,7 +42,8 @@ with GraphDatabase.driver(URI, auth=AUTH) as driver:
                 st.button("Next", on_click=set_stage, args=["2-requirement", selection])
         elif st.session_state["stage"] == "2-requirement":
             with placeholder.container():
-                requirements = ["North", "East", "South", "West"]
+                requirements = st.session_state["selection"]
+                st.text(requirements)
                 st.markdown("#### Do you face?")
                 st.text("")
                 st.button("Get recommendation", type="primary", on_click=set_stage, args=["3-recommendation"])
