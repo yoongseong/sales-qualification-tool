@@ -32,6 +32,7 @@ if st.session_state["stage"] == "1-challenge":
             "MATCH (c:Challenge) RETURN c.name AS name",
             database_="neo4j",
         )
+        st.write(records)
         st.markdown("#### Are you facing any challenges in the following area of your IT infrastructure?")
         selection = st.pills("Choose as many as you like", records, selection_mode="multi")
         st.text("")
