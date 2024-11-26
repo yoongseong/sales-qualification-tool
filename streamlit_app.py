@@ -1,6 +1,9 @@
 import streamlit as st
 from neo4j import GraphDatabase
 
+URI = st.secrets["NEO4J_URI"]
+AUTH = (st.secrets["NEO4J_USERNAME"], st.secrets["NEO4J_PASSWORD"])
+
 st.logo("gallery/logo.png")
 st.title(":clipboard: NTT Com DD Sales Qualification Tool")
 
@@ -11,6 +14,8 @@ if "stage" not in st.session_state:
     st.session_state["stage"] = "1-challenge"
 
 placeholder = st.empty()
+with GraphDatabase.driver(URI, auth=AUTH) as driver:
+    driver.verify_connectivity()
 if st.session_state["stage"] == "1-challenge":
     with placeholder.container():
         challenges = ["North", "East", "South", "West"]
