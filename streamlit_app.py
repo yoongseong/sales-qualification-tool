@@ -36,7 +36,7 @@ with GraphDatabase.driver(URI, auth=AUTH) as driver:
                 st.text(type(records[0]))
                 st.write(records)
                 st.markdown("#### Are you facing any challenges in the following area of your IT infrastructure?")
-                selection = st.pills("Choose as many as you like", records, selection_mode="multi")
+                selection = st.pills("Choose as many as you like", records[0]["name"], selection_mode="multi")
                 st.text("")
                 st.button("Next", on_click=set_stage, args=["2-requirement"])
         elif st.session_state["stage"] == "2-requirement":
