@@ -76,7 +76,7 @@ with GraphDatabase.driver(URI, auth=AUTH) as driver:
                         key="challenge_answer_mem",
                         selection_mode="multi")
                     st.text("")
-                    st.form_submit_button("Next", on_click=get_requirements, args=["2-requirement"])
+                    st.form_submit_button("Next", icon=":material/arrow_forward:", on_click=get_requirements, args=["2-requirement"])
                     # st.button("Next", on_click=get_requirements, args=["2-requirement", selection])
         elif st.session_state["stage"] == "2-requirement":
             with placeholder.container():
@@ -112,15 +112,35 @@ with GraphDatabase.driver(URI, auth=AUTH) as driver:
                         )
                         st.text("")
                         question_no += 1
-                    st.form_submit_button("Get recommendation", type="primary", on_click=get_recommendation, args=["3-recommendation"])
+                    st.form_submit_button("Get recommendation", type="primary", icon=":material/network_intelligence_update:", on_click=get_recommendation, args=["3-recommendation"])
                     # submit = st.form_submit_button("Get recommendation", type="primary")
-                    st.form_submit_button("Back", on_click=set_stage, args=["1-challenge"])
+                    st.form_submit_button("Back", icon=":material/arrow_back:", on_click=set_stage, args=["1-challenge"])
 
                 # if submit:
                 #     get_recommendation("3-recommendation", answer_set)
         elif st.session_state["stage"] == "3-recommendation":
             with placeholder.container():
-                st.text(st.session_state["requirement_answer"])
-                st.button("Start again", on_click=set_stage, args=["1-challenge"])
+                reqIds = []
+                for key, value in st.session_state["requirement_answer"].items():
+                    if value == "Yes":
+                        reqIds.append(key)
+
+                records, summary, keys = driver.execute_query(
+                    """
+                    MATCH (p:Product)-[:SOLVE]->(r:Requirement)
+                    WHERE r.reqId IN $requirement_ids
+                    RETURN collect(DISTINCT properties(p)) as productList
+                    """, 
+                    requirement_ids=reqIds, 
+                    database_="neo4j",
+                )
+                st.subheader("The product recommendation as below:")
+                for p in records[0]["productList"]:
+                    with st.expander(f'**{p["name"]}**'):
+                        st.markdown(f'[{p["fullName"]}]({p["url"]})')
+                # st.text(records[0]["productList"])
+                # st.text(records)
+                st.text("")
+                st.button("Start again", icon=":material/restart_alt:", on_click=set_stage, args=["1-challenge"])
     except Exception as e:
         st.exception(e)
