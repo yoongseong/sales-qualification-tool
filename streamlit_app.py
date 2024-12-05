@@ -1,6 +1,7 @@
 import streamlit as st
 from neo4j import GraphDatabase
 
+# Retrieve from secrets.toml
 URI = st.secrets["NEO4J_URI"]
 AUTH = (st.secrets["NEO4J_USERNAME"], st.secrets["NEO4J_PASSWORD"])
 
