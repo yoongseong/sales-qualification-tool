@@ -6,6 +6,18 @@ from neo4j import GraphDatabase
 URI = st.secrets["NEO4J_URI"]
 AUTH = (st.secrets["NEO4J_USERNAME"], st.secrets["NEO4J_PASSWORD"])
 
+def load_bundle(locale):
+    # Load in the text bundle and filter by language locale.
+    df = pd.read_csv("text_bundle.csv")
+    df = df.query(f"locale == '{locale}'")
+
+    # Create and return a dictionary of key/values.
+    lang_dict = {df.key.to_list()[i]:df.value.to_list()[i] for i in range(len(df.key.to_list()))}
+    return lang_dict
+
+# lang_dict = load_bundle(lang_options[locale])
+lang_dict = load_bundle("en_US")
+
 st.set_page_config(
     page_title="NTT Com DD Sales Tool",
     page_icon="gallery/favicon.ico",
@@ -13,9 +25,11 @@ st.set_page_config(
 )
 
 st.logo("gallery/logo.png")
-st.title(":clipboard: NTT Com DD Sales Qualification Tool")
+# st.title(":clipboard: NTT Com DD Sales Qualification Tool")
+st.title(f":clipboard: {lang_dict['title']}")
 st.text("")
 st.text("")
+
 
 def set_stage(stage):
     st.session_state["stage"] = stage
