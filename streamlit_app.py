@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 from neo4j import GraphDatabase
 
 # Retrieve from secrets.toml
