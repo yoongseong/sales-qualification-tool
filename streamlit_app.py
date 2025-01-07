@@ -6,6 +6,12 @@ from neo4j import GraphDatabase
 URI = st.secrets["NEO4J_URI"]
 AUTH = (st.secrets["NEO4J_USERNAME"], st.secrets["NEO4J_PASSWORD"])
 
+st.set_page_config(
+    page_title="NTT Com DD Sales Tool",
+    page_icon="gallery/favicon.ico",
+    layout="wide"
+)
+
 def load_bundle(locale):
     # Load in the text bundle and filter by language locale.
     df = pd.read_csv("text_bundle.csv")
@@ -16,13 +22,17 @@ def load_bundle(locale):
     return lang_dict
 
 # lang_dict = load_bundle(lang_options[locale])
-lang_dict = load_bundle("en_US")
 
-st.set_page_config(
-    page_title=lang_dict["page_title"],
-    page_icon="gallery/favicon.ico",
-    layout="wide"
-)
+with st.sidebar:
+    lang_options = {
+        "English (US)":"en_US",
+        "日本語":"ja_JP"
+    }
+
+    st.subheader("Language")
+    locale = st.radio(label="Select from below:", options=list(lang_options.keys()))    
+    lang_dict = load_bundle(lang_options[locale])
+
 
 st.logo("gallery/logo.png")
 # st.title(":clipboard: NTT Com DD Sales Qualification Tool")
