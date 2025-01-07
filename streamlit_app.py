@@ -19,7 +19,7 @@ def load_bundle(locale):
 lang_dict = load_bundle("en_US")
 
 st.set_page_config(
-    page_title="NTT Com DD Sales Tool",
+    page_title=lang_dict["page_title"],
     page_icon="gallery/favicon.ico",
     layout="wide"
 )
@@ -36,7 +36,7 @@ def set_stage(stage):
 
 def get_requirements(stage):
     if len(st.session_state["challenge_answer_mem"]) == 0:
-        st.warning("No selection is made. Please select at least 1 challenge to proceed.", icon="⚠️")
+        st.warning(lang_dict["s1_warning"], icon="⚠️")
     else:
         # Store the challenge answer into another permanent variable to prevent it is lost after page rerun
         st.session_state["challenge_answer"] = st.session_state["challenge_answer_mem"]
@@ -57,15 +57,15 @@ def get_recommendation(stage):
     #     st.text(type(v))
     #     st.text(type("None"))
     if all(v is None for v in st.session_state["requirement_answer"].values()):
-        st.warning("No selection is made. Please answer at least 1 question to proceed.", icon="⚠️")
+        st.warning(lang_dict["s2_warning"], icon="⚠️")
     else:
         set_stage(stage)
         # st.session_state["answer_set"] = answer_set
     # st.text(st.session_state["answer_set"])
     # st.text(answer_set)
 
-if "language" not in st.session_state:
-    st.session_state["language"] = "en"
+# if "language" not in st.session_state:
+#     st.session_state["language"] = "en"
     
 if "stage" not in st.session_state:
     st.session_state["stage"] = "1-challenge"
@@ -98,21 +98,22 @@ with GraphDatabase.driver(URI, auth=AUTH) as driver:
                 )
                 # Create this dictionary variable to store the challenge name and other language version
                 option_map = {}
-                language_name = f'name_{st.session_state["language"]}'
+                # language_name = f'name_{st.session_state["language"]}'
+                language_name = f"name_{lang_dict['language']}"
                 for c in records[0]["challenges"]:
                     option_map.update({c["name"]: c[language_name]})
                 # st.text(option_map)
                 with st.form("challenge_form", clear_on_submit=False, border=False):
-                    st.markdown("#### Are you facing any challenges in the following area of your IT infrastructure?")
+                    st.markdown(f"#### {lang_dict['s1_question']}")
                     selection = st.pills(
-                        "Choose as many as you like", 
+                        lang_dict['s1_pill_label'], 
                         options=option_map.keys(),
                         selection_mode="multi",
                         format_func=lambda option: option_map[option],
                         key="challenge_answer_mem"
                     )
                     st.text("")
-                    st.form_submit_button("Next", icon=":material/arrow_forward:", on_click=get_requirements, args=["2-requirement"])
+                    st.form_submit_button(lang_dict['s1_button_label'], icon=":material/arrow_forward:", on_click=get_requirements, args=["2-requirement"])
                     # st.button("Next", on_click=get_requirements, args=["2-requirement", selection])
         elif st.session_state["stage"] == "2-requirement":
             with placeholder.container():
@@ -134,24 +135,33 @@ with GraphDatabase.driver(URI, auth=AUTH) as driver:
                 with st.form("requirement_form", border=False):
                     question_no = 1
                     # answer_set = {}
+                    # Example of value = question_en
+                    question_column_name = f"question_{lang_dict['language']}"
+                    # Create this dictionary to be used in radio format_func to display 
+                    # the option in the desired language
+                    radio_options = {
+                        "Yes": lang_dict["s2_radio_yes"],
+                        "No": lang_dict["s2_radio_no"]
+                    }
                     for r in requirement_list:
                         # answer_set[r["reqId"]] = r["reqId"]
-                        st.markdown(f'#### {question_no}. {r["question_en"]}')
+                        st.markdown(f'#### {question_no}. {r[question_column_name]}')
                         # answer_set[r["reqId"]] = st.radio(
                         # key_var = r["reqId"]
                         st.radio(
-                            r["question_en"], 
+                            r[question_column_name], 
                             ["Yes", "No"],
                             index=None,
+                            format_func=lambda x: radio_options[x],
                             key=r["reqId"],
                             horizontal=True, 
                             label_visibility="collapsed"
                         )
                         st.text("")
                         question_no += 1
-                    st.form_submit_button("Get recommendation", type="primary", icon=":material/network_intelligence_update:", on_click=get_recommendation, args=["3-recommendation"])
+                    st.form_submit_button(lang_dict["s2_button_next"], type="primary", icon=":material/network_intelligence_update:", on_click=get_recommendation, args=["3-recommendation"])
                     # submit = st.form_submit_button("Get recommendation", type="primary")
-                    st.form_submit_button("Back", icon=":material/arrow_back:", on_click=set_stage, args=["1-challenge"])
+                    st.form_submit_button(lang_dict["s2_button_back"], icon=":material/arrow_back:", on_click=set_stage, args=["1-challenge"])
 
                 # if submit:
                 #     get_recommendation("3-recommendation", answer_set)
@@ -193,7 +203,9 @@ with GraphDatabase.driver(URI, auth=AUTH) as driver:
                 # st.text(mandatory_products)
                 
 
-                st.subheader("The product recommendation as below:")
+                st.subheader(lang_dict["s3_header"])
+                # Example of value = url_en
+                url_column_name = f"url_{lang_dict['language']}"
                 for p in records[0]["productList"]:
                     # Need to make sure the product has met the mandatory requirement
                     # before it can be displayed in the recommendation list
@@ -201,17 +213,17 @@ with GraphDatabase.driver(URI, auth=AUTH) as driver:
                         if value != p["name"]: 
                             # Product name has no mandatory requirement, so proceed to recommend
                             with st.expander(f'**{p["name"]}**'):
-                                st.markdown(f'[{p["fullName"]}]({p["url_en"]})')
+                                st.markdown(f'[{p["fullName"]}]({p[url_column_name]})')
                         else:
                             # Product name has mandatory requirement, so check if mandatory requirement ID
                             # is fulfilled
                             if key in reqIds:
                                 with st.expander(f'**{p["name"]}**'):
-                                    st.markdown(f'[{p["fullName"]}]({p["url_en"]})')
+                                    st.markdown(f'[{p["fullName"]}]({p[url_column_name]})')
 
                 # st.text(records[0]["productList"])
                 # st.text(records)
                 st.text("")
-                st.button("Start again", icon=":material/restart_alt:", on_click=set_stage, args=["1-challenge"])
+                st.button(lang_dict["s3_button_label"], icon=":material/restart_alt:", on_click=set_stage, args=["1-challenge"])
     except Exception as e:
         st.exception(e)
