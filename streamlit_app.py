@@ -143,7 +143,7 @@ with GraphDatabase.driver(URI, auth=AUTH) as driver:
                     st.session_state["requirement_answer"].update({r["reqId"]: "None"})
 
                 with st.form("requirement_form", border=False):
-                    st.markdown(f":red[:material/info: ***{lang_dict['s2_instruction']}***]")
+                    st.markdown(f"##### :red[:material/info: {lang_dict['s2_instruction']}]")
                     question_no = 1
                     # answer_set = {}
                     # Example of value = question_en
