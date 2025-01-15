@@ -15,17 +15,17 @@ en_US,s2_warning,"No selection is made. Please answer at least 1 question to pro
 en_US,s3_header,"The product recommendation as below:"
 en_US,s3_button_label,"Start again"
 ja_JP,language,ja
-ja_JP,page_title,JP_page_title
-ja_JP,title,JP_title
-ja_JP,s1_question,JP_s1_question
-ja_JP,s1_pill_label,JP_s1_pill_label
-ja_JP,s1_button_label,JP_s1_button_label
-ja_JP,s1_warning,JP_s1_warning
-ja_JP,s2_instruction,JP_s2_instruction
-ja_JP,s2_radio_yes,JP_s2_radio_yes
-ja_JP,s2_radio_no,JP_s2_radio_no
-ja_JP,s2_button_next,JP_s2_button_next
-ja_JP,s2_button_back,JP_s2_button_back
-ja_JP,s2_warning,JP_s2_warning
-ja_JP,s3_header,JP_s3_header
-ja_JP,s3_button_label,JP_s3_button_label
+ja_JP,page_title,NTT Com DDセールスツール
+ja_JP,title,NTT Com DD販促ツール
+ja_JP,s1_question,ITインフラの次の領域で何か課題に直面していますか?
+ja_JP,s1_pill_label,当てはまるものを選択して下さい。複数回答可
+ja_JP,s1_button_label,次
+ja_JP,s1_warning,選択されていません。続行するには、少なくとも 1 つの選択肢を選択してください。
+ja_JP,s2_instruction,関連する質問にのみ回答してください。すべての質問に回答する必要はありません。
+ja_JP,s2_radio_yes,はい
+ja_JP,s2_radio_no,いいえ
+ja_JP,s2_button_next,推奨を確認する
+ja_JP,s2_button_back,戻る
+ja_JP,s2_warning,選択されていません。続行するには、少なくとも 1 つの質問に回答してください。
+ja_JP,s3_header,推奨製品は次のとおりです。
+ja_JP,s3_button_label,もう一度やり直す
